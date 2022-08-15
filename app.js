@@ -2,6 +2,8 @@ body = document.querySelector("body");
 input = document.querySelector("input");
 button = document.querySelector("button");
 container = document.querySelector(".container");
+displayCard = document.querySelector(".display-card");
+
 
 const weatherImage = {
   spring:
@@ -39,11 +41,9 @@ const displayBackground = () => {
   const currentMonth = new Date().getMonth();
   Object.entries(season).forEach((entry) => {
     const [key, value] = entry;
-    console.log(key, value);
     if (value.includes(currentMonth)) {
       body.style.backgroundImage = `url(${weatherImage[key]})`;
-      body.classList.add('body')
-      console.log(key, typeof key);
+      body.classList.add("body");
     }
   });
 };
@@ -56,11 +56,11 @@ const getDefaultLocation = async () => {
     { mode: "cors" }
   );
   const data = await response.json();
-  console.log(data.main.temp);
+  console.log(data);
   const div = document.createElement("div");
   div.classList.add("default-location");
-  //   div.innerHTML = `<p>${data.main.temp}</p>`;
-  div.textContent = data.main.temp;
+
+  div.textContent = `${data.name} ${data.main.temp}°F`;
   container.appendChild(div);
 };
 
@@ -86,3 +86,12 @@ button.addEventListener("click", () => {
   getAnotherLocation();
   input.value = "";
 });
+
+// function getLocation() {
+//     if (navigator.geolocation) {
+//       navigator.geolocation.getCurrentPosition(showPosition);
+
+//     }
+// }
+
+//   geoLocation()
