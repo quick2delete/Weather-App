@@ -1,5 +1,7 @@
-let lat;
-let long;
+body = document.querySelector("body");
+input = document.querySelector("input");
+button = document.querySelector("button");
+container = document.querySelector(".container");
 
 const weatherImage = {
   spring:
@@ -8,26 +10,79 @@ const weatherImage = {
     "https://images.unsplash.com/photo-1527661591475-527312dd65f5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTJ8fHN1bW1lcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=400&q=60",
   autumn:
     "https://images.unsplash.com/photo-1567584032175-e3605e93b056?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fGF1dHVtbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=400&q=60",
-  windter:
-    "https://images.unsplash.com/photo-1567584032175-e3605e93b056?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTh8fGF1dHVtbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=400&q=60",
+  winter:
+    "https://images.unsplash.com/photo-1489674267075-cee793167910?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8d2ludGVyfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
 };
 
-const getCoords = function () {
-  navigator.geolocation.getCurrentPosition((position) => {
-    lat = position.coords.latitude;
-    long = position.coords.longitude;
+const season = {
+  spring: [3, 4, 5, 6],
+  summer: [7, 8, 9],
+  autumn: [10, 11],
+  winter: [12, 1, 2],
+};
+// const getCoords = function () {
+//   let lon;
+//   let lat;
+//   if (navigator.geolocation) {
+//     navigator.geolocation.getCurrentPosition(function (position) {
+//       lon = position.coords.longitude;
+//       lat = position.coords.latitude;
 
-    console.log(lat, long);
+//       return { lon, lat };
+//     });
+//     console.log(lon, lat);
+//   }
+// };
+// getCoords();
+
+const displayBackground = () => {
+  const currentMonth = new Date().getMonth();
+  Object.entries(season).forEach((entry) => {
+    const [key, value] = entry;
+    console.log(key, value);
+    if (value.includes(currentMonth)) {
+      body.style.backgroundImage = `url(${weatherImage[key]})`;
+      body.classList.add('body')
+      console.log(key, typeof key);
+    }
   });
 };
 
-const getJSON = async () => {
-  getCoords();
+displayBackground();
+
+const getDefaultLocation = async () => {
   const response = await fetch(
-    `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${long}&appid=f1e25dfd4a577596b8baad7c9b470acb`,
+    `http://api.openweathermap.org/data/2.5/weather?q=lyndhurst&units=imperial&APPID=b0c26b7fcaa3307b8e38791942b5159b`,
     { mode: "cors" }
   );
-  console.log(response);
+  const data = await response.json();
+  console.log(data.main.temp);
+  const div = document.createElement("div");
+  div.classList.add("default-location");
+  //   div.innerHTML = `<p>${data.main.temp}</p>`;
+  div.textContent = data.main.temp;
+  container.appendChild(div);
 };
 
-getJSON();
+getDefaultLocation();
+
+const getAnotherLocation = async () => {
+  const response = await fetch(
+    `http://api.openweathermap.org/data/2.5/weather?q=${input.value}&units=imperial&APPID=b0c26b7fcaa3307b8e38791942b5159b`,
+    { mode: "cors" }
+  );
+  const data = await response.json();
+  console.log(data);
+  const div = document.createElement("div");
+  div.classList.add("another-location");
+  //   div.innerHTML = `<p>${data.main.temp}</p>`;
+  div.textContent = data.main.temp;
+  container.appendChild(div);
+};
+
+button.addEventListener("click", () => {
+  const defaultLocation = document.querySelector(".default-location");
+  defaultLocation.style.opacity = 0;
+  getAnotherLocation();
+  input.value = "";
+});
