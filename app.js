@@ -1,9 +1,15 @@
-body = document.querySelector("body");
-input = document.querySelector("input");
-button = document.querySelector("button");
-container = document.querySelector(".container");
-displayCard = document.querySelector(".display-card");
-
+const body = document.querySelector("body");
+const input = document.querySelector("input");
+const button = document.querySelector("button");
+const container = document.querySelector(".container");
+const displayCard = document.querySelector(".display-card");
+const town = document.querySelector(".town");
+const temperature = document.querySelector(".temperature");
+const humidity = document.querySelector(".humidity");
+const description = document.querySelector(".description");
+const sunrise = document.querySelector(".sunrise");
+const sunset = document.querySelector(".sunset");
+const p = document.querySelectorAll("p");
 
 const weatherImage = {
   spring:
@@ -22,26 +28,13 @@ const season = {
   autumn: [10, 11],
   winter: [12, 1, 2],
 };
-// const getCoords = function () {
-//   let lon;
-//   let lat;
-//   if (navigator.geolocation) {
-//     navigator.geolocation.getCurrentPosition(function (position) {
-//       lon = position.coords.longitude;
-//       lat = position.coords.latitude;
-
-//       return { lon, lat };
-//     });
-//     console.log(lon, lat);
-//   }
-// };
-// getCoords();
 
 const displayBackground = () => {
   const currentMonth = new Date().getMonth();
   Object.entries(season).forEach((entry) => {
     const [key, value] = entry;
     if (value.includes(currentMonth)) {
+      //currentMonth
       body.style.backgroundImage = `url(${weatherImage[key]})`;
       body.classList.add("body");
     }
@@ -51,17 +44,25 @@ const displayBackground = () => {
 displayBackground();
 
 const getDefaultLocation = async () => {
-  const response = await fetch(
-    `http://api.openweathermap.org/data/2.5/weather?q=lyndhurst&units=imperial&APPID=b0c26b7fcaa3307b8e38791942b5159b`,
-    { mode: "cors" }
-  );
-  const data = await response.json();
-  console.log(data);
-  const div = document.createElement("div");
-  div.classList.add("default-location");
-
-  div.textContent = `${data.name} ${data.main.temp}°F`;
-  container.appendChild(div);
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      let lat = await position.coords.latitude;
+      let lon = await position.coords.longitude;
+      const response = await fetch(
+        `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&APPID=b0c26b7fcaa3307b8e38791942b5159b`,
+        { mode: "cors" }
+      );
+      const data = await response.json();
+      console.log(data);
+      town.textContent = `${data.name}`;
+      temperature.textContent = `Temp: ${data.main.temp}°F`;
+      humidity.textContent = `Humidity: ${data.main.humidity}`;
+      description.textContent = `${data.weather[0].description}`;
+      for (let item of p) {
+        item.classList.toggle("font-bg-1");
+      }
+    });
+  }
 };
 
 getDefaultLocation();
@@ -73,25 +74,23 @@ const getAnotherLocation = async () => {
   );
   const data = await response.json();
   console.log(data);
-  const div = document.createElement("div");
-  div.classList.add("another-location");
-  //   div.innerHTML = `<p>${data.main.temp}</p>`;
-  div.textContent = data.main.temp;
-  container.appendChild(div);
+  town.textContent = `${data.name}`;
+  temperature.textContent = `Temp: ${data.main.temp}°F`;
+  humidity.textContent = `Humidity: ${data.main.humidity}`;
+  description.textContent = `${data.weather[0].description}`;
+  for (let item of p) {
+    item.classList.toggle("font-bg-1");
+  }
 };
 
 button.addEventListener("click", () => {
-  const defaultLocation = document.querySelector(".default-location");
-  defaultLocation.style.opacity = 0;
+  for (let item of p) {
+    item.classList.toggle("font-bg-1");
+  }
+  town.textContent = "";
+  temperature.textContent = "";
+  humidity.textContent = "";
+  description.textContent = "";
   getAnotherLocation();
   input.value = "";
 });
-
-// function getLocation() {
-//     if (navigator.geolocation) {
-//       navigator.geolocation.getCurrentPosition(showPosition);
-
-//     }
-// }
-
-//   geoLocation()

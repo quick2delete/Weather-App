@@ -6,8 +6,15 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+  width: 100%;
+}
+
 body {
   font-family: "Poppins", sans-serif;
+  width: 100%;
+  height: 100%;
 }
 
 .body {
@@ -18,8 +25,89 @@ body {
   background-size: cover;
 }
 
-.display-card{
-    width: 100%;
-    height: 100px;
-    background-color: white;
+h1 {
+  color: rgb(80, 78, 78);
+  padding: 20px;
+}
+
+.input-value {
+  display: flex;
+  color: rgb(80, 78, 78);
+  gap: 15px;
+  padding: 20px;
+}
+
+label {
+  font-weight: bolder;
+}
+
+input {
+  height: 25px;
+  width: 250px;
+  border-radius: 5px;
+  border: none;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 10px 10px 20px #b96e57;
+}
+
+button {
+  width: 90px;
+  height: 25px;
+  border-radius: 5px;
+  border: none;
+  background-color: #7faffd;
+  color: white;
+  font-weight: bolder;
+}
+
+button:hover {
+  font-size: 1rem;
+  box-shadow: 5px 5px 20px #b96e57;
+}
+
+.display-card {
+  display: flex;
+  width: 100%;
+  height: 100px;
+  background-color: rgb(170, 167, 167);
+  margin: 20px auto;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: white;
+  opacity: 0.6;
+  gap: 30px;
+  box-shadow: 0 5px 20px #b96e57;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.display-card p {
+  text-shadow: 1px 1px #d1e675;
+}
+
+.font-bg-1 {
+  animation-name: font-size;
+  animation-duration: 300ms;
+}
+
+.font-bg-2 {
+  animation-name: font-size;
+  animation-duration: 500ms;
+}
+
+@keyframes font-size {
+  0% {
+    font-size: 0rem;
+  }
+
+  50% {
+    font-size: 1rem;
+  }
+  100% {
+    font-size: 2rem;
+  }
 }
